@@ -6,14 +6,14 @@ data class AnimeDto(
     val title: String,
     val episodes: Int?,
     val score: Double?,
-    val images: ImagesDto
+    val images: ImagesDto?
 )
 
 data class ImagesDto(
-    val jpg: JpgDto
+    val jpg: JpgDto?
 )
 
 data class JpgDto(
     @SerializedName("image_url")
-    val imageUrl: String
+    val imageUrl: String?
 )
