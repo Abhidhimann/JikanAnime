@@ -18,6 +18,7 @@ materialIconsExtended = "1.7.8"
 retrofit = "3.0.0"
 roomRuntime = "2.8.3"
 foundation = "1.10.2"
+androidYoutubePlayer = "13.0.0"
 
 
 [libraries]
@@ -48,6 +49,7 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+android-youtube-player = { group = "com.pierfrancescosoffritti.androidyoutubeplayer", name = "core", version.ref = "androidYoutubePlayer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -3,6 +3,8 @@ package com.abhishek.jikananime.data.remote.response
 import com.google.gson.annotations.SerializedName
 
 data class AnimeDto(
+    @SerializedName("mal_id")
+    val animeId: Int,
     val title: String,
     val episodes: Int?,
     val score: Double?,

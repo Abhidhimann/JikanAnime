@@ -5,36 +5,25 @@ data class Anime(
     val title: String,
     val episodes: Int,
     val rating: Double,
-    val imageUrl: String
+    val imageUrl: String,
+    val animeId: Int,
 )
 
 val dummyAnimeList = listOf(
     Anime(
         id = 1,
-        title = "Fullmetal Alchemist: Brotherhood",
-        episodes = 64,
-        rating = 9.1,
-        imageUrl = "https://cdn.myanimelist.net/images/anime/1223/96541.jpg"
+        title = "Dhiman",
+        episodes = 1,
+        rating = 2.0,
+        imageUrl = "",
+        animeId = 1
     ),
     Anime(
         id = 2,
-        title = "Attack on Titan",
-        episodes = 75,
-        rating = 8.9,
-        imageUrl = "https://cdn.myanimelist.net/images/anime/10/47347.jpg"
-    ),
-    Anime(
-        id = 3,
-        title = "Death Note",
-        episodes = 37,
-        rating = 8.6,
-        imageUrl = "https://cdn.myanimelist.net/images/anime/9/9453.jpg"
-    ),
-    Anime(
-        id = 4,
-        title = "Naruto: Shippuden",
-        episodes = 500,
-        rating = 8.2,
-        imageUrl = "https://cdn.myanimelist.net/images/anime/5/17407.jpg"
-    ),
+        title = "Abhishek",
+        episodes = 1,
+        rating = 3.4,
+        imageUrl = "",
+        animeId = 2
+    )
 )

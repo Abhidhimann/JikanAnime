@@ -1,8 +1,8 @@
-package com.abhishek.jikananime.presentation.screens
+package com.abhishek.jikananime.presentation.screens.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -44,39 +44,52 @@ import com.abhishek.jikananime.domain.model.Anime
 import com.abhishek.jikananime.domain.model.dummyAnimeList
 
 @Composable
-fun HomeScreenRoot(viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()) {
+fun HomeScreenRoot(
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
+    onAnimeClick: (Int) -> Unit
+) {
     val animeList by viewModel.animeFlow.collectAsStateWithLifecycle()
-    HomeScreen(animeList)
+    HomeScreen(animeList) {
+        onAnimeClick(it)
+    }
 }
 
 @Composable
-fun HomeScreen(animeList: List<Anime>) {
+fun HomeScreen(animeList: List<Anime>, onAnimeClick: (Int) -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .padding(
                 start = 8.dp,
                 end = 8.dp,
-                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(animeList) { anime ->
-                        AnimeGridItem(anime)
-                    }
+                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
+            ),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(
+                items = animeList,
+                key = { anime -> anime.id }
+            ) { anime ->
+                AnimeGridItem(anime) {
+                    onAnimeClick(anime.animeId)
                 }
             }
+        }
+    }
 }
 
 
 @Composable
-fun AnimeGridItem(anime: Anime) {
+fun AnimeGridItem(anime: Anime, onClick: (Int) -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(anime.id) },
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -145,5 +158,5 @@ fun AnimeGridItem(anime: Anime) {
 @Composable
 @Preview
 fun HomeScreenPreview() {
-    HomeScreen(dummyAnimeList)
+    HomeScreen(dummyAnimeList){}
 }

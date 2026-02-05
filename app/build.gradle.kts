@@ -69,6 +69,9 @@ dependencies {
     // extended icons
     implementation(libs.androidx.material.icons.extended)
 
+    // youtube
+    implementation(libs.android.youtube.player)
+
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

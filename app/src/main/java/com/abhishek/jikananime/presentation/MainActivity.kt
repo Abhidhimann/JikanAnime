@@ -4,14 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.abhishek.jikananime.presentation.screens.HomeScreenRoot
+import androidx.navigation.compose.rememberNavController
+import com.abhishek.jikananime.presentation.navigation.NavigationHost
+import com.abhishek.jikananime.presentation.navigation.Screen
+import com.abhishek.jikananime.presentation.screens.home.HomeScreenRoot
 import com.abhishek.jikananime.presentation.theme.JikanAnimeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +18,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JikanAnimeTheme {
-                HomeScreenRoot()
+                val navController = rememberNavController()
+
+                NavigationHost(
+                    navController = navController,
+                    startDestination = Screen.Home.route
+                )
             }
         }
     }

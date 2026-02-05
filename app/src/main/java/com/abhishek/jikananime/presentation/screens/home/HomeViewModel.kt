@@ -1,4 +1,4 @@
-package com.abhishek.jikananime.presentation.screens
+package com.abhishek.jikananime.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ class HomeViewModel @Inject constructor(
         animeRepository.observeTopAnime()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
+                started = SharingStarted.Companion.WhileSubscribed(5_000),
                 initialValue = emptyList()
             )
 

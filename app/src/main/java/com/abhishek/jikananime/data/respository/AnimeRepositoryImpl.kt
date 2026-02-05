@@ -8,6 +8,7 @@ import com.abhishek.jikananime.data.mapper.toEntity
 import com.abhishek.jikananime.data.remote.api.JikanApi
 import com.abhishek.jikananime.di.IoDispatcher
 import com.abhishek.jikananime.domain.model.Anime
+import com.abhishek.jikananime.domain.model.AnimeDetails
 import com.abhishek.jikananime.domain.repository.AnimeRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -55,4 +56,27 @@ class AnimeRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getAnimeDetails(animeId: Int): Result<AnimeDetails> =
+        withContext(dispatcher) {
+            try {
+                val response = jikanApi.getAnimeDetails(animeId)
+
+                if (!response.isSuccessful) {
+                    return@withContext Result.failure(
+                        Exception("API error ${response.code()}")
+                    )
+                }
+
+                val body = response.body()
+                    ?: return@withContext Result.failure(
+                        Exception("Empty body")
+                    )
+
+                Result.success(body.data.toDomain())
+
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
 }
