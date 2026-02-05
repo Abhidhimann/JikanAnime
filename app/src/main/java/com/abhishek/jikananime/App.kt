@@ -1,6 +1,7 @@
 package com.abhishek.jikananime
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class App: Application() {
-}
+@HiltAndroidApp
+class App: Application()
