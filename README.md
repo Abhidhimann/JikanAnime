@@ -20,7 +20,9 @@
 - **Error Handling**: No static blocking "No Internet" screen; **Shows a Toast on refresh while allowing users to browse cached movies**. 
 - **Loading State**: Circular loading indicator and Shimmer.
 - **System UI Support**: Fully supports Light & Dark theme, Landscape / orientation changes and Edge-to-edge layout.
-- **Youtube Player**: Youtube player to play trailer video if avaible else shows anime poster. 
+- **Youtube Player**: Youtube player to play trailer video if avaible else shows anime poster.
+
+## Apk File: [Anime App](https://github.com/Abhidhimann/JikanAnime/blob/main/app-release.apk.zip) 
 
 ## Demo
 
