@@ -17,7 +17,7 @@ fun AnimePoster(
     imageUrl: String,
     shape: Shape = CardDefaults.shape,
     modifier: Modifier = Modifier,
-    @DrawableRes defaultImageId: Int = R.drawable.movie_not_found
+    @DrawableRes defaultImageId: Int = R.drawable.image_not_found
 ) {
     Card(
         modifier = modifier
@@ -26,7 +26,7 @@ fun AnimePoster(
     ) {
         AsyncImage(
             model = imageUrl.ifEmpty { defaultImageId },
-            contentDescription = "movie_image",
+            contentDescription = "anime_image",
             modifier = modifier,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = defaultImageId),

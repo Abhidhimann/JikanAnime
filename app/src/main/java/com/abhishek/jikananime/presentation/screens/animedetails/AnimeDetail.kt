@@ -146,7 +146,13 @@ fun AnimeDetailsContent(anime: AnimeDetails) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     Log.i("AnimeDetailsContent", "anime: $anime")
-    val targetHeight = max(460.dp, screenHeight * 0.6f)
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    
+    val targetHeight = if (isLandscape) {
+        screenHeight * 0.7f
+    } else {
+        max(460.dp, screenHeight * 0.6f)
+    }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 24.dp)

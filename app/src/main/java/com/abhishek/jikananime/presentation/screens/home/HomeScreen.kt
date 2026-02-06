@@ -1,6 +1,7 @@
 package com.abhishek.jikananime.presentation.screens.home
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,13 +25,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.rounded.CloudOff
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -38,7 +36,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,7 +54,6 @@ import androidx.lifecycle.flowWithLifecycle
 import com.abhishek.jikananime.domain.model.Anime
 import com.abhishek.jikananime.domain.model.dummyAnimeList
 import com.abhishek.jikananime.presentation.utils.AnimePoster
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun HomeScreenRoot(
@@ -65,7 +61,6 @@ fun HomeScreenRoot(
     onAnimeClick: (Int) -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -77,17 +72,13 @@ fun HomeScreenRoot(
                     is HomeEvent.ShowToast -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     }
-
-                    is HomeEvent.ShowSnackBar -> {
-                        snackBarHostState.showSnackbar(event.message)
-                    }
                 }
             }
     }
 
     HomeScreen(
         state = state,
-        onRefresh = { viewModel.refreshMovies() },
+        onRefresh = { viewModel.refreshAnime() },
         onAnimeClick = { onAnimeClick(it) }
     )
 }
@@ -99,6 +90,7 @@ fun HomeScreen(state: HomeUiState, onRefresh: () -> Unit, onAnimeClick: (Int) ->
     Surface(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(
                 start = 8.dp,
                 end = 8.dp,
@@ -162,7 +154,7 @@ fun AnimeGridLayout(state: HomeUiState, onAnimeClick: (Int) -> Unit) {
 
     LazyVerticalGrid(
         state = listState,
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Adaptive(minSize = 160.dp),
         contentPadding = PaddingValues(bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)

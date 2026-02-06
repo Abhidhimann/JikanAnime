@@ -39,7 +39,7 @@ class AnimeRepositoryImpl @Inject constructor(
                     return@withContext Result.failure(DataError.LimitReached)
                 }
 
-                Log.i(this@AnimeRepositoryImpl.classTag(), "fetching movie with page $nextPage")
+                Log.i(this@AnimeRepositoryImpl.classTag(), "fetching anime with page $nextPage")
 
                 val response = jikanApi.getTopAnime(nextPage)
 

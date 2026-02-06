@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,14 +42,14 @@ class HomeViewModel @Inject constructor(
             animeRepository.observeTopAnime().collect { list ->
                 if (list.isEmpty()) {
                     // app first launch
-                    refreshMovies()
+                    refreshAnime()
                 } else
                     _uiState.update { it.copy(animeList = list) }
             }
         }
     }
 
-    fun refreshMovies() = viewModelScope.launch {
+    fun refreshAnime() = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true) }
 
         if (!isConnected.value) {
@@ -66,7 +65,7 @@ class HomeViewModel @Inject constructor(
         animeRepository.refreshTopAnime().onSuccess {
             _uiState.update { it.copy(isLoading = false) }
         }.onFailure { exception ->
-            Log.e(classTag(), "Fetch movies from network $exception")
+            Log.e(classTag(), "Fetch animes from network $exception")
             // later can make error handler, later can segregate error code to different message
             val message = when (exception) {
                 is DataError.LimitReached -> "No more anime found"
