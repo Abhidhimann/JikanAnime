@@ -34,4 +34,5 @@ https://github.com/user-attachments/assets/165d816f-93c1-4fd3-9062-8268dce4a1ea
 
 - Trailer playback depends on YouTube availability and most animes *youtube_id* is not availabile in api response.
 - Only the anime list is cached to enable fast startup, offline browsing, and anime details are fetched on demand to avoid storing large, rarely reused data and to keep the local database lightweight.
+- Unit tests are not included due to time constraints.
 
