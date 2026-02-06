@@ -31,7 +31,7 @@ class AnimeDetailViewModel @Inject constructor(
 
     fun loadAnimeDetails() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true) }
 
             animeRepository.getAnimeDetails(animeId)
                 .onSuccess { animeDetails ->

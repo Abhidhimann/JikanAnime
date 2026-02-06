@@ -1,7 +1,10 @@
 package com.abhishek.jikananime.presentation.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abhishek.jikananime.core.DataError
+import com.abhishek.jikananime.core.classTag
 import com.abhishek.jikananime.domain.repository.AnimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,12 +28,34 @@ class HomeViewModel @Inject constructor(
     fun loadData() {
         viewModelScope.launch {
             animeRepository.observeTopAnime().collect { list ->
-                _uiState.update { it.copy(animeList = list) }
+                if (list.isEmpty()) {
+                    // app first launch
+                    refreshMovies()
+                } else
+                    _uiState.update { it.copy(animeList = list) }
             }
         }
     }
 
-    fun refreshMovies()  = viewModelScope.launch {
-        animeRepository.refreshTopAnime()
+    fun refreshMovies() = viewModelScope.launch {
+        _uiState.update { it.copy(isLoading = true) }
+        animeRepository.refreshTopAnime().onSuccess {
+            _uiState.update { it.copy(isLoading = false) }
+        }.onFailure { exception ->
+            Log.e(classTag(), "Fetch movies from network $exception")
+            // later can make error handler, later can segregate error code to different message
+            val message = when (exception) {
+                is DataError.LimitReached -> "No more anime found"
+                is DataError.NetworkError -> "Network error occurred!"
+                is DataError.EmptyBody -> "Some error occurred!"
+                else -> "Some error occurred!"
+            }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    error = message
+                )
+            }
+        }
     }
 }

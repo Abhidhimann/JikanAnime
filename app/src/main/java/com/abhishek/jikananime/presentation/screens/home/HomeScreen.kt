@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.CloudOff
@@ -33,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -94,7 +96,7 @@ fun HomeScreen(state: HomeUiState, onRefresh: () -> Unit, onAnimeClick: (Int) ->
                 }
 
                 else -> {
-                    AnimeGridLayout(animeList = state.animeList, onAnimeClick)
+                    AnimeGridLayout(state, onAnimeClick)
                 }
             }
         }
@@ -105,7 +107,7 @@ fun HomeScreen(state: HomeUiState, onRefresh: () -> Unit, onAnimeClick: (Int) ->
 fun HomeShimmerList() {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = PaddingValues(bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxSize()
@@ -151,8 +153,19 @@ fun HomeErrorState(
 }
 
 @Composable
-fun AnimeGridLayout(animeList: List<Anime>, onAnimeClick: (Int) -> Unit) {
+fun AnimeGridLayout(state: HomeUiState, onAnimeClick: (Int) -> Unit) {
+    val listState = rememberLazyGridState()
+    val animeList = state.animeList
+
+    // after refresh scrolling to 0th pos
+    LaunchedEffect(state) {
+        if (!state.isLoading && state.animeList.isNotEmpty()) {
+            listState.scrollToItem(0)
+        }
+    }
+
     LazyVerticalGrid(
+        state = listState,
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
