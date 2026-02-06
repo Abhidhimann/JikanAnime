@@ -1,6 +1,8 @@
 package com.abhishek.jikananime.presentation.navigation
 
 import android.util.Log
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,13 +20,12 @@ import com.abhishek.jikananime.presentation.screens.home.HomeScreenRoot
 @Composable
 fun NavigationHost(navController: NavHostController, startDestination: String) {
     NavHost(
-        navController, startDestination,
-        exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 200))
-        },
-        enterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 200))
-        },
+        navController = navController,
+        startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None }
     ) {
         // home screen
         composable(Screen.Home.route) {
