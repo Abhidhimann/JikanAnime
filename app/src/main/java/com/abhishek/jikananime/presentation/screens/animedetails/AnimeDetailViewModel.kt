@@ -48,7 +48,7 @@ class AnimeDetailViewModel @Inject constructor(
                         it.copy(
                             isLoading = false,
                             // temporary, user custom defined error message
-                            error = e.message ?: "Unknown error"
+                            error = "Error!"
                         )
                     }
                 }
