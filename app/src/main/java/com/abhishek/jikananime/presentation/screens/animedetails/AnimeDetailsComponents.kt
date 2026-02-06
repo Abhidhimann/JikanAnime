@@ -128,29 +128,6 @@ fun ExpandableText(
     }
 }
 
-@Composable
-fun AnimePoster(
-    imageUrl: String,
-    shape: Shape = CardDefaults.shape,
-    modifier: Modifier = Modifier,
-    @DrawableRes defaultImageId: Int = R.drawable.movie_not_found
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        shape = shape,
-    ) {
-        AsyncImage(
-            model = imageUrl.ifEmpty { defaultImageId },
-            contentDescription = "movie_image",
-            modifier = modifier,
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = defaultImageId),
-            error = painterResource(id = defaultImageId)
-        )
-    }
-}
-
 fun ViewGroup.disableWebViewsBackground() {
     children.forEach { child ->
         when (child) {

@@ -8,6 +8,8 @@ import com.abhishek.jikananime.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,9 +22,8 @@ class AnimeDetailViewModel @Inject constructor(
     private val animeId: Int =
         checkNotNull(savedStateHandle[Screen.AnimeDetails.ARG_ANIME_ID]) // handled in navigation component so safe
 
-    private val _state =
-        MutableStateFlow<AnimeDetailUiState>(AnimeDetailUiState.Loading)
-    val state: StateFlow<AnimeDetailUiState> = _state
+    private val _uiState = MutableStateFlow(AnimeDetailUiState(isLoading = true))
+    val uiState = _uiState.asStateFlow()
 
     init {
         loadAnimeDetails()
@@ -30,16 +31,26 @@ class AnimeDetailViewModel @Inject constructor(
 
     fun loadAnimeDetails() {
         viewModelScope.launch {
-            _state.value = AnimeDetailUiState.Loading
+            _uiState.update { it.copy(isLoading = true, error = null) }
 
             animeRepository.getAnimeDetails(animeId)
-                .onSuccess {
-                    _state.value = AnimeDetailUiState.Success(it)
+                .onSuccess { animeDetails ->
+                    _uiState.update {
+                        it.copy(
+                            anime = animeDetails,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
                 }
-                .onFailure {
-                    _state.value = AnimeDetailUiState.Error(
-                        it.message ?: "Something went wrong"
-                    )
+                .onFailure { e ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            // temporary, user custom defined error message
+                            error = e.message ?: "Unknown error"
+                        )
+                    }
                 }
         }
     }

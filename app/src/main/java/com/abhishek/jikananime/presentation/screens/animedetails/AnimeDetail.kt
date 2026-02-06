@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -49,35 +50,36 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.abhishek.jikananime.domain.model.AnimeDetails
 import com.abhishek.jikananime.domain.model.dummyAnimeDetails
+import com.abhishek.jikananime.presentation.utils.AnimePoster
 import java.util.Locale
 
 @Composable
 fun AnimeDetailRoot(viewModel: AnimeDetailViewModel = hiltViewModel()) {
-    val uiState by viewModel.state.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     AnimeDetailsScreen(uiState) {
         viewModel.loadAnimeDetails()
     }
 }
 
 @Composable
-fun AnimeDetailsScreen(uiState: AnimeDetailUiState, onRetry: () -> Unit = {}) {
+fun AnimeDetailsScreen(state: AnimeDetailUiState, onRetry: () -> Unit = {}) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        when (val state = uiState) {
-            AnimeDetailUiState.Loading -> {
-                LoadingState()
-            }
-
-            is AnimeDetailUiState.Error -> {
+        when {
+            state.error != null && state.anime == null -> {
                 ErrorState(
-                    message = state.message,
+                    message = state.error,
                     onRetry = onRetry
                 )
             }
 
-            is AnimeDetailUiState.Success -> {
+            state.isLoading && state.anime == null -> {
+                LoadingState()
+            }
+
+            state.anime != null -> {
                 AnimeDetailsContent(anime = state.anime)
             }
         }
@@ -141,7 +143,8 @@ fun ErrorState(
 
 @Composable
 fun AnimeDetailsContent(anime: AnimeDetails) {
-    val screenHeight = Configuration.SCREEN_HEIGHT_DP_UNDEFINED.dp
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
     Log.i("AnimeDetailsContent", "anime: $anime")
     val targetHeight = max(460.dp, screenHeight * 0.6f)
     LazyColumn(
