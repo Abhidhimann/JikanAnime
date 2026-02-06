@@ -4,22 +4,35 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abhishek.jikananime.core.DataError
+import com.abhishek.jikananime.core.NetworkMonitor
 import com.abhishek.jikananime.core.classTag
 import com.abhishek.jikananime.domain.repository.AnimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val animeRepository: AnimeRepository
+    private val animeRepository: AnimeRepository,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = MutableSharedFlow<HomeEvent>()
+    val events = _events.asSharedFlow()
+
+    val isConnected = networkMonitor.isConnectedFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     init {
         loadData()
@@ -39,6 +52,17 @@ class HomeViewModel @Inject constructor(
 
     fun refreshMovies() = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true) }
+
+        if (!isConnected.value) {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                )
+            }
+            _events.emit(HomeEvent.ShowToast("No Internet Connection!"))
+            return@launch
+        }
+
         animeRepository.refreshTopAnime().onSuccess {
             _uiState.update { it.copy(isLoading = false) }
         }.onFailure { exception ->
@@ -53,9 +77,9 @@ class HomeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    error = message
                 )
             }
+            _events.emit(HomeEvent.ShowToast(message))
         }
     }
 }
