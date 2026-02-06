@@ -43,9 +43,7 @@ fun NavigationHost(navController: NavHostController, startDestination: String) {
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt(Screen.AnimeDetails.ARG_ANIME_ID)
             if (movieId != null) {
-                AnimeDetailRoot {
-                    navController.popBackStack()
-                }
+                AnimeDetailRoot()
             } else {
                 LaunchedEffect(Unit) {
                     // show error todo

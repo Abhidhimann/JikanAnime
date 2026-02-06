@@ -3,7 +3,6 @@ package com.abhishek.jikananime.presentation.screens.animedetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.abhishek.jikananime.domain.model.AnimeDetails
 import com.abhishek.jikananime.domain.repository.AnimeRepository
 import com.abhishek.jikananime.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel

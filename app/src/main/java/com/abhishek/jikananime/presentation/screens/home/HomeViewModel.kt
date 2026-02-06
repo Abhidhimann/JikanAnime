@@ -24,12 +24,7 @@ class HomeViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-    init {
-        refreshMovies()
-    }
-
     fun refreshMovies()  = viewModelScope.launch {
         animeRepository.refreshTopAnime()
     }
-
 }

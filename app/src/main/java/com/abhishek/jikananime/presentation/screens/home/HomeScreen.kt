@@ -3,6 +3,7 @@ package com.abhishek.jikananime.presentation.screens.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -62,12 +63,13 @@ fun HomeScreen(animeList: List<Anime>, onAnimeClick: (Int) -> Unit) {
             .padding(
                 start = 8.dp,
                 end = 8.dp,
-                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
+                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding(),
             ),
         color = MaterialTheme.colorScheme.background
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(bottom = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

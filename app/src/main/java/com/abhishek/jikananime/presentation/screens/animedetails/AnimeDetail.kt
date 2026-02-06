@@ -1,18 +1,16 @@
 package com.abhishek.jikananime.presentation.screens.animedetails
 
-import AnimeYouTubePlayer
-import ExpandableText
-import android.annotation.SuppressLint
+
+import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,20 +38,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
 import com.abhishek.jikananime.domain.model.AnimeDetails
 import com.abhishek.jikananime.domain.model.dummyAnimeDetails
+import java.util.Locale
 
 @Composable
-fun AnimeDetailRoot(viewModel: AnimeDetailViewModel = hiltViewModel(), navigateBack: () -> Unit) {
+fun AnimeDetailRoot(viewModel: AnimeDetailViewModel = hiltViewModel()) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     AnimeDetailsScreen(uiState) {
         viewModel.loadAnimeDetails()
@@ -140,35 +138,29 @@ fun ErrorState(
     }
 }
 
-@SuppressLint("DefaultLocale")
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AnimeDetailsContent(anime: AnimeDetails) {
+    val screenHeight = Configuration.SCREEN_HEIGHT_DP_UNDEFINED.dp
+    Log.i("AnimeDetailsContent", "anime: $anime")
+    val targetHeight = max(460.dp, screenHeight * 0.6f)
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-
         item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(Color.Black)
-            ) {
-                if (anime.trailerYoutubeId.isEmpty()) {
-                    AnimeYouTubePlayer(
-                        videoId = anime.trailerYoutubeId,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    AsyncImage(
-                        model = anime.posterUrl,
-                        contentDescription = anime.title,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+            if (anime.trailerYoutubeId.isNotBlank()) {
+                AnimeYouTubePlayer(
+                    videoId = anime.trailerYoutubeId,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black)
+                )
+            } else {
+                AnimePoster(
+                    imageUrl = anime.posterUrl,
+                    modifier = Modifier
+                        .height(targetHeight)
+                )
             }
         }
 
@@ -199,7 +191,7 @@ fun AnimeDetailsContent(anime: AnimeDetails) {
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = String.format("%.1f", anime.rating),
+                            text = String.format(Locale.getDefault(), "%.1f", anime.rating),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -214,7 +206,7 @@ fun AnimeDetailsContent(anime: AnimeDetails) {
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "${anime.episodes ?: "?"} Eps",
+                            text = "${anime.episodes} Eps",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -237,7 +229,7 @@ fun AnimeDetailsContent(anime: AnimeDetails) {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
 
@@ -304,7 +296,7 @@ fun CastItem(name: String) {
         Text(
             text = name,
             style = MaterialTheme.typography.bodySmall,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            textAlign = TextAlign.Center,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
