@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -130,17 +131,14 @@ fun ExpandableText(
 @Composable
 fun AnimePoster(
     imageUrl: String,
+    shape: Shape = CardDefaults.shape,
     modifier: Modifier = Modifier,
     @DrawableRes defaultImageId: Int = R.drawable.movie_not_found
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        )
+        shape = shape,
     ) {
         AsyncImage(
             model = imageUrl.ifEmpty { defaultImageId },

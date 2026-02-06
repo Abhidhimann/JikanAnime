@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Star
@@ -158,6 +159,7 @@ fun AnimeDetailsContent(anime: AnimeDetails) {
             } else {
                 AnimePoster(
                     imageUrl = anime.posterUrl,
+                    shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .height(targetHeight)
                 )

@@ -35,5 +35,5 @@ fun AnimeDetailsDto.toDomain(): AnimeDetails =
         episodes = episodes ?: 0,
         rating = score ?: 0.0,
         posterUrl = images.jpg?.imageUrl ?: "",
-        trailerYoutubeId = "52v_6lRR_Cw"
+        trailerYoutubeId = trailer?.youtubeId ?: ""
     )

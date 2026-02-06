@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.abhishek.jikananime.domain.model.Anime
 import com.abhishek.jikananime.domain.model.dummyAnimeList
+import com.abhishek.jikananime.presentation.screens.animedetails.AnimePoster
 
 @Composable
 fun HomeScreenRoot(
@@ -98,13 +100,12 @@ fun AnimeGridItem(anime: Anime, onClick: (Int) -> Unit) {
         )
     ) {
         Column {
-            AsyncImage(
-                model = anime.imageUrl,
-                contentDescription = anime.title,
+            AnimePoster(
+                imageUrl = anime.imageUrl,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(0.7f),
-                contentScale = ContentScale.Crop
+                shape = RectangleShape
             )
 
             Column(
