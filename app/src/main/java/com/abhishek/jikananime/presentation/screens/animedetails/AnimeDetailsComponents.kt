@@ -1,6 +1,8 @@
 package com.abhishek.jikananime.presentation.screens.animedetails
 
 import android.app.Activity
+import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -33,6 +35,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.children
 import androidx.lifecycle.LifecycleOwner
 import coil.compose.AsyncImage
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -74,9 +77,8 @@ fun AnimeYouTubePlayer(
             modifier = modifier,
             factory = { context ->
                 YouTubePlayerView(context).apply {
-                    setBackgroundColor(android.graphics.Color.BLACK)
                     lifecycleOwner.lifecycle.addObserver(this)
-                    enableAutomaticInitialization = false
+                    disableWebViewsBackground()
 
                     addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                         override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -148,5 +150,14 @@ fun AnimePoster(
             placeholder = painterResource(id = defaultImageId),
             error = painterResource(id = defaultImageId)
         )
+    }
+}
+
+fun ViewGroup.disableWebViewsBackground() {
+    children.forEach { child ->
+        when (child) {
+            is WebView -> child.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            is ViewGroup -> child.disableWebViewsBackground()
+        }
     }
 }
